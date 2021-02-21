@@ -1,0 +1,229 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: inherit;
+	outline: none;
+	font-size:16px;
+	 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+html,body{
+	height: 100vh;
+	box-sizing: border-box;
+}
+a{
+	text-decoration: none;
+	color:black;
+}
+.user-image{
+	width: 40px;
+	height: 40px;
+	border-radius:40px;
+	margin-right: 10px;
+}
+.chat{
+	display: flex;
+	height: 100%;
+}
+.chat .sidebar{
+	width: 300px;
+	min-width: 300px;
+}
+
+.chat .sidebar {
+	display: flex;
+	flex-direction: column;
+	background-color: #F5F5F5;
+}
+.chat .sidebar .search{
+	padding: 10px;
+	height: 50px;
+	min-height: 50px;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-bottom: 1px solid black;
+}
+.chat .sidebar .search input{
+	width: 100%;
+	height: 30px;
+	padding: 10px 35px 10px 10px;
+	box-sizing: border-box;
+	border-radius: 30px;
+	border:none;
+	font-size:15px;
+}
+.chat .sidebar .search i{
+	position: absolute;
+	height: 100%;
+	margin-right: 13px;
+	width: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: 0;
+	cursor:pointer;
+	color:rgba(0,0,0,.4);
+}
+.chat .sidebar .contact{
+	overflow:auto;
+}
+.chat .sidebar .contact a{
+	cursor:pointer;
+}
+.chat .sidebar .contact a.active{
+	display: block;
+	background-color: #fff;
+}
+.chat .sidebar .contact a:hover{
+	display: block;
+	background-color: #fff;
+}
+.chat .sidebar .user{
+	display: flex;
+	padding: 10px;
+	align-items: center;
+	position: relative;
+}
+.info-me .user{
+	display:flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	position: relative;
+	min-height: 100%;
+}
+
+ .user  .info .name{
+	color:#333;
+	font-size:16px;
+	font-weight: 500;
+	margin-bottom: 3px;
+}
+.chat .sidebar  .user  .info .last-message,
+.last-seen,.send-time{
+	color:#999;
+	font-size:13px;
+}
+.content .info-me .user .last-seen{
+	position: absolute;
+	bottom: -15px;
+	height: 20px;
+}
+.chat .sidebar  .user  .info .counter{
+	position: absolute;
+	color:white;
+	text-align: center;
+	font-size: 13px;
+	right: 20px;
+	top:20px;
+	width: 20px;
+	height: 20px;
+	background-color: red;
+	border-radius: 10px;
+}
+.content {
+	display: none;
+	flex: 1;
+	overflow-x: hidden;
+	flex-direction: column;
+}
+.content .message-content{
+	flex:1;
+	overflow: auto;
+}
+.content .info-me{
+	height: 50px;
+	border-bottom: 1px solid black; 
+	display: flex;
+	align-items: center;
+	padding: 20px;
+}
+.content .info-me .user span{
+	display:block;
+}
+.content .info-me .icon{
+	margin-left: auto;
+}
+.content .info-me .icon i {
+	color:rgba(0 , 0 , 0 ,.5);
+	font-size:18px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.content .write-message{
+	padding: 15px;
+	display: flex;
+	align-items: center;
+	background-color:#EEEEEE;
+}
+.content .write-message i{
+	font-size:16px;
+	height: 40px;
+	width: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius:50%;
+	color:white;
+}
+.content .write-message i:not(:last-child){
+	margin-right: 10px;
+}
+.content .write-message i.fa.fa-laugh{
+	background-color: #2196F3;
+}
+.content .write-message i.fa.fa-microphone{
+	background-color: #FF5722;
+}
+.content .write-message i.fa.fa-image{
+	background-color: #4CAF50;
+}
+.content .write-message input{
+	flex:1;
+	border-radius:30px;
+	height: 40px;
+	padding: 10px;
+	outline: none;
+	border:none;
+}
+.message-content {
+	display: flex;
+	flex:1;
+	padding: 30px;
+	flex-direction: column;
+}
+.message-content .message-me{
+	margin-left: auto;
+}
+.message-content .send-time{
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+.message-content .message-me .send-time{
+	text-align: right;
+}
+.message-content .message .send-time{
+	text-align: left;
+}
+.message-content  span{
+	color:white;
+	display: inline-block;
+	font-size:15px;
+	padding: 6px 10px;
+	border-radius: 30px;
+	line-height: 30px;
+}
+.message-content .message-me span{
+	background-color: #2196F3;
+}
+.message-content .message span{
+	background-color:#f7f7f7;
+	color:black;
+}
+@media screen and (max-width:768px){
+	.chat .sidebar{
+		width: 200px;
+		min-width: 200px;
+	}
+}
