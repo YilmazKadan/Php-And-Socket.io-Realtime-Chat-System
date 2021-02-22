@@ -16,21 +16,19 @@ if (isset($_POST['post_name'])) {
         $sorgu->execute(array($user_id, $user_id));
         $array = $sorgu->fetchAll(PDO::FETCH_ASSOC);
 
-        // Sender id convert md5 
+        // Sender id and receiver id convert base64
         $new_array = array();
         // BURADA TIKLANAN ALICININ BANA YOLLADIĞI MESAJLARI VE BENİM ONA YOLLADIĞIM MESAJLARI YAKALAYIP DİZİ OLARAK DÖNDÜRÜYORUZ.
         foreach ($array as $key) {
-            if ($key['message_sender_id'] == $receiver_id) {
+            if ($key['message_sender_id'] == $receiver_id and $key['message_receiver_id'] == $user_id) {
+
+                // Gönderici id leri burada şifreleyip ön tarafa yolluyoruz.
+                $key['message_sender_id'] = base64_encode($key['message_sender_id']);
                 array_push($new_array, $key);
             } else if ($key['message_receiver_id'] == $receiver_id and $key['message_sender_id'] == $user_id) {
+                $key['message_sender_id'] = base64_encode($key['message_sender_id']);
                 array_push($new_array, $key);
             }
-        }
-
-        // Gönderici id leri burada şifreleyip ön tarafa yolluyoruz.
-
-        foreach ($new_array as $key){
-            $key['sender_id'] = base64_encode($key['message_sender_id']);
         }
         echo json_encode($new_array, JSON_UNESCAPED_UNICODE);
     }

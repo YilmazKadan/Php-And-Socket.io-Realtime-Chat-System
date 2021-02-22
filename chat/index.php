@@ -2,121 +2,144 @@
 
 require_once '../connection/connection.php';
 if (!isset($_SESSION['user']))
-	header("location:../index.php");
-echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["user"]["user_id"]) . '"';
+    header("location:../index.php");
+
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<title>Chat Application Design</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-	<link rel="stylesheet" href="css/style.css">
-	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #a1cae2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.users {
+            width: 400px;
+            min-height: 400px;
+            border: 1px solid #fff;
+            padding: 30px;
+        }
+
+        div.users ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        div.users ul li a {
+            color: rgba(0, 0, 0, .5);
+            font-size: 20px;
+            display: inline-flex;
+            height: 20px;
+            align-items: center;
+
+        }
+
+        div.users ul li a:hover {
+            color: black;
+        }
+
+        header.head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
 </head>
 
 <body>
-	<div class="deneme">
+    <div class="users">
+        <header class="head">
+            <h3>USERS</h3>
+            <a href="chat.php">Chat Box</a>
+        </header>
+        <hr>
+        <ul>
 
-	</div>
-	<div class="chat">
-		<div class="sidebar">
-			<div class="search">
-				<input type="text" name="" placeholder="Search..">
-				<i class="fas fa-search"></i>
-			</div>
-			<div class="contact">
-				<?php
-				/*
-				Mesajlar tablosundan  alıcının oturum açan id olduğu mesajları 'message_sender_id' alanına göre
-				gruplar , ancak karşı tarafa sadece bu  kullanıcı mesaj atmış ise bu durumda alıcı olarak bu kullanıcı olmayacağı
-				için , aşağıda farklı bir sql sorgusu ile göndericinin biz olduğu mesajları da grupluyoruz.
-				
-				*/
-				$query = $db->prepare("SELECT * FROM  messages m inner join users u 
-					on m.message_sender_id = u.user_id  
-					where message_receiver_id = ? group by message_sender_id");
-				$query->execute(array($_SESSION['user']['user_id']));
-				$first_array = $query->fetchAll(PDO::FETCH_ASSOC);
+            <?php
+            try {
+                echo '<input type="hidden" name="user_id" value="' . $_SESSION['user']['user_id'] . '">';
+                $query = $db->prepare("SELECT * FROM users where user_id not in (?)");
+                $query->execute(array($_SESSION['user']['user_id']));
+                $response = $query->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($response as $key) {
+            ?>
+                    <li>
+                        <a href="#"><?php echo $key['user_name'] ?></a>
+                        <input type="hidden" name="receiver_id" value="<?php echo base64_encode($key['user_id']) ?>">
+                        <input type="text" name="message_content" placeholder="Mesajınızı giriniz ve entere basınız">
+                    </li>
+            <?php }
+            } catch (PDOException $ex) {
+                $ex->getMessage();
+            }
 
-				/*
-					Burada göndericinin biz olduğu mesajları 'message_receiver_id' alanına göre yani alıcılara göre grupluyoruz.
-					Daha sonra bu alıcılar kendi id'leri ile user tablosu user_id ile ilişklendiriliyor. Daha sonra yukarıdaki ilk
-					dizi ile bir karşılaştırma yapılıyor eğer ikinci dizideki kullanıcı birinci dizide çekilmemiş ise onu da diziye ekliyoruz.
-					Ve bu sayede sadece bizim mesaj atmış olduğumuz kullanıcılar da listeleniyor.
-
-
-				*/
-				$query = $db->prepare("SELECT * FROM  messages m inner join users u 
-				 on m.message_receiver_id = u.user_id  
-				 where message_sender_id = ? group by message_receiver_id");
-				$query->execute(array($_SESSION['user']['user_id']));
-				$two_array = $query->fetchAll(PDO::FETCH_ASSOC);
-
-				$control = true;	
-				//Burada karşılaştırma işlemini user_id'ye göre yapıyoruz.
-				for ($i = 0; $i < count($two_array); $i++) {
-					foreach ($first_array as $key) {
-						if ($key['user_id'] != $two_array[$i]['user_id']) {
-							$control = true;
-						} else {
-							$control = false;
-						}
-					}
-					if ($control) {
-
-						array_unshift($first_array, $two_array[$i]);
-					}
-				}
-
-
-
-				foreach ($first_array as $yazdir) {
-				?>
-					<a class="receiver-link">
-						<div class="user">
-							<img src="img/avatar.jpg" class="user-image"></img>
-							<div class="info">
-								<span class="name"><?php echo $yazdir['user_name'] ?></span>
-								<input type="hidden" name="sender_id" value="<?php echo base64_encode($yazdir['user_id'])  ?>">
-								<!-- <span class="last-message">Nerelerdesin Be Gülüm ?</span> -->
-								<!-- <span class="counter">5</span> -->
-							</div>
-						</div>
-					</a>
-				<?php } ?>
-
-			</div>
-		</div>
-		<div class="content">
-			<header>
-				<div class="info-me">
-					<img src="img/avatar.jpg" class="user-image">
-					<div class="user">
-						<span class="name"></span>
-						<span class="last-seen"></span>
-						<input type="hidden" name="receiver_id">
-					</div>
-					<div class="icon">
-						<i class="fa fa-info-circle"></i>
-						<i class="fa fa-ellipsis-v"></i>
-					</div>
-				</div>
-			</header>
-			<div class="message-content">
-				<!-- Message content -->
-			</div>
-			<div class="write-message">
-				<i class="fa fa-laugh"></i>
-				<input type="text" name="" id="write-input" placeholder="Bir şeyler yaz..">
-				<i class="fa fa-microphone"></i>
-				<i class="fa fa-image"></i>
-			</div>
-		</div>
-	</div>
+            ?>
+        </ul>
+    </div>
 </body>
 <script src="script/jquery.min.js"></script>
-<script src="script/script.js"></script>
+<script>
+    const message_input = document.querySelectorAll("ul li input[name='message_content']");
+    const user_id = document.querySelector('input[name="user_id"]');
+    message_input.forEach((element) => {
+        element.addEventListener('keyup', function(e) {
+            if (e.keyCode == 13) {
+                var receiver_id = element.previousElementSibling.value;
+                var info = {
+                    sender_id: user_id.value,
+                    receiver_id: receiver_id,
+                    message_content: element.value
+                }
+                $.ajax({
+                    url: "../connection/ajax.php",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        info,
+                        post_name: "insert_message"
+                    },
+                    success: function(result) {
+                        console.log(result);
+                    },
+                    error: function(e) {
+                        console.log("Error");
+                    }
+
+                })
+
+            }
+        })
+    });
+</script>
 
 </html>

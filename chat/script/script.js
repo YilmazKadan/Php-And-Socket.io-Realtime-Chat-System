@@ -6,10 +6,11 @@ window.onload = function () {
     const message_content = document.querySelector('.message-content');
     const content = document.querySelector('.content');
 
-    var receiver_name = document.querySelector(".info-me .user span.name");
-    var receiver_image = document.querySelector(".info-me .user-image");
-    var receiver_id = document.querySelector('input[name="receiver_id"]');
-    var user_id = document.querySelector('input[name="user_id"]');
+    const receiver_name = document.querySelector(".info-me .user span.name");
+    const receiver_image = document.querySelector(".info-me .user-image");
+    const receiver_id = document.querySelector('input[name="receiver_id"]');
+    const user_id = document.querySelector('input[name="user_id"]');
+    const message_user = document.querySelector('input[name="message_user"]'); //Get ile gelen user 
 
 
     setInterval(function () { last_seen.innerText = "" }, 10000);
@@ -119,7 +120,9 @@ window.onload = function () {
         message_print();
     });
 
-    //    RECEIVER LINK
+
+    // GET CONTROL 
+    // RECEIVER LINK
     const receiver_link = document.querySelectorAll("a.receiver-link");
     receiver_link.forEach(link => {
         link.addEventListener("click", function () {
@@ -146,6 +149,7 @@ window.onload = function () {
                 data: { post_name:"get_message",receiver_id: receiver_id.value },
                 success: function (result) {
                     message_content.innerHTML = "";
+                    console.log(result);
                     result.forEach(element => {
                         
                         // Gelen mesaj verisi ben miyim yoksa alıcı mı onu kontrol etme alanı.

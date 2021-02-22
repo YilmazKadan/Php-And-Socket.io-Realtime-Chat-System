@@ -28,6 +28,9 @@ a{
 	width: 300px;
 	min-width: 300px;
 }
+.chat .sidebar.close{
+	display:hidden;
+}
 
 .chat .sidebar {
 	display: flex;
@@ -121,11 +124,11 @@ a{
 	background-color: red;
 	border-radius: 10px;
 }
-.content {
-	display: none;
+.content {	
 	flex: 1;
 	overflow-x: hidden;
 	flex-direction: column;
+	display:none;
 }
 .content .message-content{
 	flex:1;
