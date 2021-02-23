@@ -19,6 +19,9 @@ io.on('connection', (socket) => {
   socket.on("writing", (writing) => {
     io.emit("writing", writing);
   });
+  socket.on("message_seen",(data)=>{
+    io.emit("message_seen",data);
+  })
 });
 
 http.listen(3000, () => {

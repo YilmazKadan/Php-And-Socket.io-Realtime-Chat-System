@@ -218,7 +218,8 @@ a{
 	line-height: 30px;
 }
 .message-content .message-me span{
-	background-color: #2196F3;
+	background-color: #dcf8c6;
+	color:#303030;
 }
 .message-content .message span{
 	background-color:#f7f7f7;

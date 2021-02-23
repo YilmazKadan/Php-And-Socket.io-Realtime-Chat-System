@@ -32,7 +32,7 @@ if (isset($_POST['post_name'])) {
         }
         echo json_encode($new_array, JSON_UNESCAPED_UNICODE);
     }
-
+    // MESSAGE INSERT
     else if($postName == "insert_message"){
         $data = $_POST['info'];
         $sender_id = $user_id;
@@ -51,6 +51,20 @@ if (isset($_POST['post_name'])) {
             $result['sonuc'] = "olumsuz";
         }
         echo json_encode($result);
+    }
+
+    // MESSAGE SEEN UPDATE
+    else if ($postName == "messageSeenUpdate"){
+        $sender_id = base64_decode($_POST['sender_id']);
+        $query = $db->prepare("UPDATE messages set message_seen = 1 where message_receiver_id = ? and message_sender_id = ? and message_seen = 0");
+        $query->execute(array($user_id,$sender_id));
+        if ($query->rowCount()) {
+            $sonuc['durum']= "güncellendi";
+        }
+        else{
+            $sonuc['durum']= "güncellenmedi";
+        }
+        echo json_encode($sonuc);
     }
     
 } else {

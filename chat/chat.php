@@ -3,7 +3,8 @@
 require_once '../connection/connection.php';
 if (!isset($_SESSION['user']))
 	header("location:../index.php");
-echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["user"]["user_id"]) . '">';
+$user_id = $_SESSION["user"]["user_id"];
+echo '<input type="hidden" name="user_id" value="' . base64_encode($user_id) . '">';
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +24,7 @@ echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["us
 	<div class="chat">
 		<div class="sidebar">
 			<div class="search">
-				
+
 			</div>
 			<div class="contact">
 				<?php
@@ -40,7 +41,7 @@ echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["us
 				 ( select max(message_id) from messages where message_receiver_id = ? group by message_sender_id ) order by message_id desc ");
 				$query->execute(array($_SESSION['user']['user_id']));
 				$first_array = $query->fetchAll(PDO::FETCH_ASSOC);
-				
+
 
 				/*
 					Burada göndericinin biz olduğu mesajları 'message_receiver_id' alanına göre yani alıcılara göre grupluyoruz.
@@ -57,10 +58,10 @@ echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["us
 				 ( select max(message_id) from messages where message_sender_id = ? group by message_receiver_id ) order by message_id desc");
 				$query->execute(array($_SESSION['user']['user_id']));
 				$second_array = $query->fetchAll(PDO::FETCH_ASSOC);
-				
+
 				//Burada karşılaştırma işlemini user_id'ye göre yapıyoruz.
-				for ($i = count($second_array)-1; $i >= 0; $i--) {
-					if (count($first_array)!= 0) { // İlk array eğer boş ise ilk arrayı ikinci arraya eşitliyoruz.
+				for ($i = count($second_array) - 1; $i >= 0; $i--) {
+					if (count($first_array) != 0) { // İlk array eğer boş ise ilk arrayı ikinci arraya eşitliyoruz.
 						foreach ($first_array as $key) {
 							if ($key['user_id'] != $second_array[$i]['user_id']) {
 								$control = true;
@@ -69,18 +70,15 @@ echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["us
 								break;
 							}
 						}
-						if($control){
+						if ($control) {
 							array_unshift($first_array, $second_array[$i]);
 						}
-					}
-					else{
+					} else {
 						$first_array = $second_array;
 					}
-					
-					
 				}
 				rsort($first_array); // En son etkileşimde bulunan mesajları sırası ile büyükten küçüğe doğru listeleme
-				
+
 				foreach ($first_array as $yazdir) {
 				?>
 					<a class="receiver-link">
@@ -90,9 +88,15 @@ echo '<input type="hidden" name="user_id" value="' . base64_encode($_SESSION["us
 								<span class="name"><?php echo $yazdir['user_name'] ?></span>
 								<input type="hidden" name="sender_id" value="<?php echo base64_encode($yazdir['user_id'])  ?>">
 								<br>
-								<span class="last-message"><?php
-								 echo $yazdir['message_content'] ?></span>
-								<!-- <span class="counter">5</span> -->
+								<span class="last-message"><?php echo substr($yazdir['message_content'], 0, 50) ?></span>
+								<?php
+								$sorgu = $db->prepare("Select * from messages where message_receiver_id = ? and message_sender_id = ? and message_seen = 0");
+								$sorgu->execute(array($user_id, $yazdir['message_sender_id']));
+								if ($sorgu->rowCount()) {
+									echo '	<span class="counter">' . $sorgu->rowCount() . '</span>';
+								}
+
+								?>
 							</div>
 						</div>
 					</a>
