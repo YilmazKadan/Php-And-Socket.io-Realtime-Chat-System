@@ -212,6 +212,7 @@ a{
 .message-content  span{
 	color:white;
 	display: inline-block;
+	min-width: 60px;
 	font-size:15px;
 	padding: 6px 10px;
 	border-radius: 30px;
@@ -221,6 +222,19 @@ a{
 	background-color: #dcf8c6;
 	color:#303030;
 }
+.message-content .message-info{
+	display:flex;
+	align-items: center;
+	justify-content: flex-end;
+	color:#999;
+}
+.message-content .message-info i{
+	margin-left: 10px;
+}
+.message-content .message .message-info{
+	justify-content: flex-start;
+}
+
 .message-content .message span{
 	background-color:#f7f7f7;
 	color:black;
