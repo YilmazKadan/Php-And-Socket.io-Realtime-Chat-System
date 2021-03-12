@@ -6,6 +6,7 @@ Socket.io  kullanımımın nedeni ise  basit ve anlık olarak veri haberleşmesi
 # Projenin içerisinde bizleri neler bekliyor ?
 - Anlık olarak mesajlaşma
 - Görüldü sistemi (Veritabanı ve socket tarafı)
+- Yazıyor sistemi
 - Atılan mesajın üzerinden geçen sürenin 30 saniye de bir güncellenmesi
 - Görülmeyen mesajların sayacının tutulması
 - Scrollun son mesaja çekilmesi ( Eski mesajlar okunduğu esnada bu işlem devre dışı bırakılmıştır , yani dinamiktir)
@@ -49,3 +50,9 @@ alanında gerekli veritabanı ayarlamalarını kendinize göre güncellemeniz ge
 </ul>
 Bu işlemlerin ardından sistemi rahatlık ile kullanabilir ve geliştirmeler yapabilirsiniz.
 
+# PROGRAMIN EKRAN GÖRÜNTÜLERİ
+![image](https://user-images.githubusercontent.com/44698680/110997352-53d51400-838e-11eb-83f3-4392889dc1a6.png)
+![image](https://user-images.githubusercontent.com/44698680/110997413-6bac9800-838e-11eb-96f2-22dc458f6c82.png)
+![image](https://user-images.githubusercontent.com/44698680/110997440-77985a00-838e-11eb-8347-8a360d50796d.png)
+![image](https://user-images.githubusercontent.com/44698680/110997635-c0e8a980-838e-11eb-80c1-ee541c990d68.png)
+![image](https://user-images.githubusercontent.com/44698680/110997742-e2e22c00-838e-11eb-9a32-d4c6a04f64ec.png)
