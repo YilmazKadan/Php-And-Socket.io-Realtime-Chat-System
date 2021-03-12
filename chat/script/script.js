@@ -5,6 +5,7 @@ window.onload = function () {
     const last_seen = document.querySelector(".user .last-seen");
     const message_content = document.querySelector('.message-content');
     const content = document.querySelector('.content');
+    const user_div = document.querySelectorAll(".receiver-link .user");
 
     const receiver_name = document.querySelector(".info-me .user span.name");
     const receiver_image = document.querySelector(".info-me .user-image");
@@ -105,7 +106,7 @@ window.onload = function () {
     socket.on("message", (msg) => {
         function addMessage() {
 
-            // MESAJ BİZE Mİ GELMİŞ KONTROL EDİYORUZ
+            // MESAJ  BİZE Mİ GELMİŞ VE ŞU ANDA AKTİF OLAN KİŞİDEN Mİ GELMİŞ  KONTROL EDİYORUZ
             if (msg.receiver_id == user_id.value && msg.sender_id == receiver_id.value || msg.sender_id == user_id.value && msg.receiver_id == receiver_id.value) {
 
                 // See icon
@@ -144,6 +145,22 @@ window.onload = function () {
                 </div> 
                 `
                 }
+            } // Mesaj bana gelmiş fakat şuanda konuşmadığım birinden geldi ise burada yakalıyoruz
+            else if (msg.receiver_id == user_id.value && msg.sender_id != receiver_id.value) {
+                var array = $(".receiver-link .user").find(".info input[name='sender_id']").each(function () {
+
+                    /*
+                    Burada mesaj gönderen alıcının yanındaki sayacı görünür hale getirip, her mesaj atıldığında değerini
+                    bir artıyoruz.
+                    */
+                    var counter_span = $(this).next().next().next();
+                    var counter_num = parseInt(counter_span.text());
+                    if (msg.sender_id == $(this).val()) {
+                        counter_span.show();
+                        counter_span.text(counter_num + 1);
+                    }
+
+                });
             }
 
         }
@@ -214,8 +231,10 @@ window.onload = function () {
                 message_seen(); //Message seen on socket
 
                 var countNotSeenMessage = sender_id.nextElementSibling.nextElementSibling.nextElementSibling;
-                if (countNotSeenMessage != null)
+                if (countNotSeenMessage != null) {
                     countNotSeenMessage.style.display = "none";
+                    countNotSeenMessage.innerText = "0";
+                }
 
                 // JQUERY GET MESSAGES
                 $.ajax({

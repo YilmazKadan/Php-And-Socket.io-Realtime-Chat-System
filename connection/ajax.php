@@ -66,6 +66,12 @@ if (isset($_POST['post_name'])) {
         }
         echo json_encode($sonuc);
     }
+    // LOGOUT
+    else if($postName == "logout"){
+        session_destroy();
+        $data['durum'] = "ok";
+        echo json_encode($data);
+    }
     
 } else {
     echo 'Not post';

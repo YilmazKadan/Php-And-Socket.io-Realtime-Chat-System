@@ -32,6 +32,7 @@ if (!isset($_SESSION['user']))
         html,
         body {
             height: 100%;
+            background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
         }
 
         body {
@@ -42,7 +43,7 @@ if (!isset($_SESSION['user']))
         }
 
         div.users {
-            width: 400px;
+            width: 500px;
             min-height: 400px;
             border: 1px solid #fff;
             padding: 30px;
@@ -56,7 +57,7 @@ if (!isset($_SESSION['user']))
         }
 
         div.users ul li a {
-            color: rgba(0, 0, 0, .5);
+            color: white;
             font-size: 20px;
             display: inline-flex;
             height: 20px;
@@ -66,6 +67,18 @@ if (!isset($_SESSION['user']))
 
         div.users ul li a:hover {
             color: black;
+        }
+        div.users ul li input{
+            height: 30px;
+            width: 250px;
+            background:transparent;
+            border:1px solid black;
+            color:white;
+            font-size:14px;
+            
+        }
+        div.users ul li input::placeholder{
+            color:white;
         }
 
         header.head {
@@ -78,6 +91,7 @@ if (!isset($_SESSION['user']))
 
 <body>
     <div class="users">
+        <button id="logout" name="logout">ÇIKIŞ</button>
         <header class="head">
             <h3>USERS</h3>
             <a href="chat.php">Chat Box</a>
@@ -111,6 +125,27 @@ if (!isset($_SESSION['user']))
 <script>
     const message_input = document.querySelectorAll("ul li input[name='message_content']");
     const user_id = document.querySelector('input[name="user_id"]');
+
+    // Çıkış yapma 
+    const logout_btn = document.querySelector("#logout");
+    logout_btn.addEventListener("click", function() {
+        $.ajax({
+            url: "../connection/ajax.php",
+            type: "POST",
+            dataType: "json",
+            data:{post_name:"logout"},
+            success:function(cevap){
+                if(cevap.durum=="ok"){
+                    window.location.href = "../";
+                }
+            },
+            error:function(error){
+                console.log(error);
+            }
+
+        });
+    });
+    // MESAJ EKLEME
     message_input.forEach((element) => {
         element.addEventListener('keyup', function(e) {
             if (e.keyCode == 13) {
@@ -129,7 +164,10 @@ if (!isset($_SESSION['user']))
                         post_name: "insert_message"
                     },
                     success: function(result) {
-                        console.log(result);
+                        if(result.sonuc == "olumlu"){
+                            element.value = "";
+                            alert("Mesaj başarılı bir şekilde ilgili kullanıcıya iletildi");
+                        }
                     },
                     error: function(e) {
                         console.log("Error");

@@ -95,6 +95,9 @@ echo '<input type="hidden" name="user_id" value="' . base64_encode($user_id) . '
 								if ($sorgu->rowCount()) {
 									echo '	<span class="counter">' . $sorgu->rowCount() . '</span>';
 								}
+								else{
+									echo '	<span class="counter" style="display:none">0</span>';
+								}
 
 								?>
 							</div>
